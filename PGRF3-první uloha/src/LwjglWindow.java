@@ -45,6 +45,8 @@ public class LwjglWindow {
 		DEBUG = debug;
 		WIDTH = width;
 		HEIGHT = height;
+		this.renderer.setWidth(WIDTH);
+		this.renderer.setHeight(HEIGHT);
 		if (DEBUG)
 			System.err.println("Run in debugging mode");
 		run();
