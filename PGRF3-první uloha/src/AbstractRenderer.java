@@ -24,13 +24,6 @@ import java.nio.DoubleBuffer;
 
 import org.lwjgl.BufferUtils;
 
-
-/**
-* 
-* @author PGRF FIM UHK
-* @version 2.0
-* @since 2019-09-02
-*/
 public abstract class AbstractRenderer {
 	int pass;
 	protected int width;
