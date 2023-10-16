@@ -20,10 +20,8 @@ public class Renderer extends AbstractRenderer{
 	private Triangle triangle;
 	private Axis axisX, axisY, axisZ;
 	private Grid grid;
-	private Sphere sphere;
 	private Camera camera;
-	private Mat4PerspRH proj;
-	private float time;
+	private Mat4PerspRH project;
 
 
 
@@ -33,21 +31,21 @@ public class Renderer extends AbstractRenderer{
 		triangle = new Triangle();
 		shaderProgamTriangle = lwjglutils.ShaderUtils.loadProgram("/triangle");
 
-		axisX = new Axis(1.f, 0.f, 0.f, new Col(1.f, 0.f, 0.f));
-		axisY = new Axis(0.f, 1.f, 0.f, new Col(0.f, 1.f, 0.f));
-		axisZ = new Axis(0.f, 0.f, 1.f, new Col(0.f, 0.f, 1.f));
+		axisX = new Axis(1.f, 1.f, 1.f,new Col(1.f, 0.f, 0.f));
+		axisY = new Axis(0.f, 1.f, 1.f,new Col(0.f,1.f,0.f));
+		axisZ = new Axis(0.f, 0.f, 1.f,new Col(0.f, 0.f, 0.f));
 		shaderProgamAxis = lwjglutils.ShaderUtils.loadProgram("/axis");
 
-		grid = new Grid(50, 50);
+		grid = new Grid(15,15);
 		shaderProgamGrid = lwjglutils.ShaderUtils.loadProgram("/grid");
 
 		//camera a projekce
 		camera = new Camera()
-				.withPosition(new Vec3D(-2.5f ,-2.5f, 3.f))
-				.withAzimuth(Math.toRadians(45))
-				.withZenith(Math.toRadians(-45))
+				.withPosition(new Vec3D(-1.f ,-1.5f, 1.f))
+				.withAzimuth(Math.toRadians(15))
+				.withZenith(Math.toRadians(20))
 				.withFirstPerson(true);
-		proj = new Mat4PerspRH(Math.PI / 4 ,height / (float)width, 0.1f, 100.f);
+		project = new Mat4PerspRH(Math.PI / 4 ,height / (float)width, 0.1f, 1000);
 
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -55,14 +53,11 @@ public class Renderer extends AbstractRenderer{
 
     @Override
     public void display() {
-		time += 0.01f;
-
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
 		//drawTriangle();
 		//drawAxis();
-		//drawGrid();
-		//drawSpeher;
+		drawGrid();
 	}
 
 	private void drawTriangle() {
@@ -81,16 +76,13 @@ public class Renderer extends AbstractRenderer{
 	private void drawGrid() {
 		glUseProgram(shaderProgamGrid);
 		setGlobalUniforms(shaderProgamGrid);
-		int locUTime = glGetUniformLocation(shaderProgamGrid, "uTime");
-		glUniform1f(locUTime, time);
 		grid.getBuffers().draw(GL_TRIANGLES, shaderProgamGrid);
 	}
 
 	private void setGlobalUniforms(int shaderProgram) {
 		int locUView = glGetUniformLocation(shaderProgram, "uView");
-		int locUProj = glGetUniformLocation(shaderProgram, "uProj");
+		int locUProject = glGetUniformLocation(shaderProgram, "uProject");
 		glUniformMatrix4fv(locUView, false, camera.getViewMatrix().floatArray());
-		glUniformMatrix4fv(locUProj, false, proj.floatArray());
 
 	}
 	private GLFWKeyCallback   keyCallback = new GLFWKeyCallback() {
