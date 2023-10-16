@@ -10,5 +10,5 @@ out vec3 color;
 
 void main() {
     color = inColor;
-    gl_Position = uProject * uView * vec4(inPosition, 0.f, 1.);
+    gl_Position = uProj * uView * vec4(inPosition, 0.f, 1.);
 }

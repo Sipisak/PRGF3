@@ -1,14 +1,14 @@
 package solids;
 
-import lwjglutils.OGLBuffers;
+
 import transforms.Col;
 
 public class Axis extends Solid {
     public Axis(float x, float y, float z, Col color) {
         // vertex buffer
         float[] vertices = {
-                0.f, 0.f, 0.f,
-                x, y, z,
+                0.f, 0.f, 0.f, (float)color.getR(), (float)color.getG(), (float)color.getB(),
+                x, y, z, (float)color.getR(), (float)color.getG(), (float)color.getB()
         };
 
         // index buffer
@@ -18,7 +18,7 @@ public class Axis extends Solid {
 
         // popsat kartě data
         lwjglutils.OGLBuffers.Attrib[] attributes = {
-                new lwjglutils.OGLBuffers.Attrib("inPosition", 2), // 2 floats
+                new lwjglutils.OGLBuffers.Attrib("inPosition", 3), // 2 floats
                 new lwjglutils.OGLBuffers.Attrib("inPosition", 3)
         };
 

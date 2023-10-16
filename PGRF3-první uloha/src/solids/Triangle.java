@@ -5,7 +5,7 @@ public class Triangle extends Solid {
     public Triangle() {
         // vertex buffer
         float[] vertices = {
-                -1.f, -1.f,   1.f, 0.f, 0.f,
+                0.f,  0.f,   1.f, 0.f, 0.f,
                 1.f,  0.f,   0.f, 1.f, 0.f,
                 0.f,  1.f,   0.f, 0.f, 1.f,
         };
