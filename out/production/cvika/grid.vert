@@ -8,7 +8,7 @@ uniform float uTime;
 
 
 void main() {
-    vec2 pos = inPosition* 2 - 1;
+    vec2 pos = inPosition * 2 - 1;
     float z = 0.5 * cos(sqrt(20 * pow(pos.x, 2) + 20 * pow(pos.y, 2)) + uTime);
 
     vec4 pos_MVP = uProj * uView * vec4(pos, z, 1.);
