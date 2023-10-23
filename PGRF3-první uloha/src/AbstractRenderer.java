@@ -29,7 +29,8 @@ public abstract class AbstractRenderer {
 	protected int width;
 	protected int height;
 	protected OGLTextRenderer textRenderer;
-	
+
+
 	public void init() {
 		OGLUtils.printOGLparameters();
 		OGLUtils.printLWJLparameters();
@@ -154,4 +155,5 @@ public abstract class AbstractRenderer {
 	public void setHeight(int height) {
 		this.height = height;
 	}
+
 }
