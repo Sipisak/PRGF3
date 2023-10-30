@@ -52,7 +52,7 @@ public class Renderer extends AbstractRenderer{
 		proj = new Mat4PerspRH(Math.PI / 4 ,height / (float)width, 0.1f, 100.f);
 
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }
 
     @Override
@@ -159,10 +159,10 @@ public class Renderer extends AbstractRenderer{
 			lastY = y;
 			double azimuthChange = deltaX * 0.005;
 			double zenithChange = deltaY * 0.005;
-//            camera = camera.addAzimuth(azimuthChange);
-//            camera = camera.addZenith(zenithChange);
+           // camera = camera.addAzimuth(azimuthChange);
+           // camera = camera.addZenith(zenithChange);
 
-//            System.out.println("Cursor position [" + x + ", " + y + "]");
+           // System.out.println("Cursor position [" + x + ", " + y + "]");
 			//renderedSolids.forEach(r -> r.setCamera(camera));
 		}
 	};
