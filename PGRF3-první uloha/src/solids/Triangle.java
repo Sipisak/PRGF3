@@ -3,11 +3,12 @@ package solids;
 public class Triangle extends Solid {
 
     public Triangle() {
+        float zOffset = 2.0f;
         // vertex buffer
         float[] vertices = {
-                0.f,  0.f,   1.f, 0.f, 0.f,
-                1.f,  0.f,   0.f, 1.f, 0.f,
-                0.f,  1.f,   0.f, 0.f, 1.f,
+                0.f,  0.f + zOffset,   1.f, 0.f, 0.f,
+                1.f,  0.f + zOffset,   0.f, 1.f, 0.f,
+                0.f,  1.f + zOffset,   0.f, 0.f, 1.f,
         };
 
         // index buffer

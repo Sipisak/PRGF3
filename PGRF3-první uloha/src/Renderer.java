@@ -15,11 +15,13 @@ import static org.lwjgl.opengl.GL20.*;
 
 public class Renderer extends AbstractRenderer{
 
-	private int shaderProgamTriangle, shaderProgamAxis, shaderProgamGrid;
-	//ArrayList<shaderProgamGrid> shaderProgamGridList = new ArrayList<>;
+	private int shaderProgamTriangle, shaderProgamAxis, shaderProgamGrid, shaderProgamSphere;
+
 	private Triangle triangle;
 	private Axis axisX, axisY, axisZ;
 	private Grid grid;
+	private Sphere sphere;
+
 	private Camera camera;
 	private Mat4 proj;
 	private float time;
@@ -27,10 +29,7 @@ public class Renderer extends AbstractRenderer{
 	private double lastY = 0;
 
 
-
-
-
-    @Override
+	@Override
     public void init() {
 		triangle = new Triangle();
 		shaderProgamTriangle = lwjglutils.ShaderUtils.loadProgram("/triangle");
@@ -43,6 +42,10 @@ public class Renderer extends AbstractRenderer{
 		grid = new Grid(50,50);
 		shaderProgamGrid = lwjglutils.ShaderUtils.loadProgram("/grid");
 
+		sphere = new Sphere(50,50);
+		shaderProgamSphere = lwjglutils.ShaderUtils.loadProgram("/sphere");
+
+
 		//camera a projekce
 		camera = new Camera()
 				.withPosition(new Vec3D(-2.f ,-2.5f, 3.f))
@@ -52,7 +55,7 @@ public class Renderer extends AbstractRenderer{
 		proj = new Mat4PerspRH(Math.PI / 4 ,height / (float)width, 0.1f, 100.f);
 
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }
 
     @Override
@@ -61,9 +64,10 @@ public class Renderer extends AbstractRenderer{
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-		//drawTriangle();
-		//drawAxis();
+		drawTriangle();
+		drawAxis();
 		drawGrid();
+		drawSphere();
 	}
 
 	private void drawTriangle() {
@@ -85,6 +89,11 @@ public class Renderer extends AbstractRenderer{
 		int locUTime = glGetUniformLocation(shaderProgamGrid, "uTime");
 		glUniform1f(locUTime,time);
 		grid.getBuffers().draw(GL_TRIANGLES, shaderProgamGrid);
+	}
+	private void drawSphere(){
+		glUseProgram(shaderProgamSphere);
+		setGlobalUniforms(shaderProgamSphere);
+		sphere.getBuffers().draw(GL_TRIANGLES, shaderProgamSphere);
 	}
 
 	private void setGlobalUniforms(int shaderProgram) {
@@ -157,13 +166,6 @@ public class Renderer extends AbstractRenderer{
 			double deltaY = y - lastY;
 			lastX = x;
 			lastY = y;
-			double azimuthChange = deltaX * 0.005;
-			double zenithChange = deltaY * 0.005;
-           // camera = camera.addAzimuth(azimuthChange);
-           // camera = camera.addZenith(zenithChange);
-
-           // System.out.println("Cursor position [" + x + ", " + y + "]");
-			//renderedSolids.forEach(r -> r.setCamera(camera));
 		}
 	};
     

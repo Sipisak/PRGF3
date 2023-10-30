@@ -6,9 +6,10 @@ import transforms.Col;
 public class Axis extends Solid {
     public Axis(float x, float y, float z, Col color) {
         // vertex buffer
+        float xOffset = -1.5f;
         float[] vertices = {
-                0.f, 0.f, 0.f, (float)color.getR(), (float)color.getG(), (float)color.getB(),
-                x, y, z, (float)color.getR(), (float)color.getG(), (float)color.getB()
+                0.f + xOffset, 0.f, 0.f, (float)color.getR(), (float)color.getG(), (float)color.getB(),
+                x + xOffset, y, z, (float)color.getR(), (float)color.getG(), (float)color.getB()
         };
 
         // index buffer

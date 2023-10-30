@@ -17,6 +17,7 @@ void main() {
     vec2 pos = inPosition * 2 - 1;
     //float z = 0.5 * cos(sqrt(20 * pow(pos.x, 2) + 20 * pow(pos.y, 2)) + uTime);
     float z = 0.f;
+
     //phong
     vec4 pos_W = vec4(pos, z ,1.);
     vec4 pos_V = uView * pos_W;
@@ -25,7 +26,6 @@ void main() {
     vec3 normal = transpose(inverse(mat3(uView))) * getNormal();
 
     //final position
-
     vec4 pos_MVP = uProj * uView * vec4(pos, z, 1.);
     gl_Position = pos_MVP;
 }

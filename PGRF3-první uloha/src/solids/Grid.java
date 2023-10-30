@@ -3,9 +3,9 @@ package solids;
 import lwjglutils.OGLBuffers;
 
 public class Grid extends Solid {
+    private int shaderProgram;
 
     /**
-     *
      * @param m - počet vrcholů v řádku
      * @param n - počet vrcholů ve sloupci
      */
@@ -20,15 +20,15 @@ public class Grid extends Solid {
         // rozsah od 0 od 1
         for (int i = 0; i < n - 1; i++) {
             for (int j = 0; j < m - 1; j++) {
-                vb[index++] = j / (float)(m - 1);
-                vb[index++] = i / (float)(n - 1);
+                vb[index++] = j / (float) (m - 1);
+                vb[index++] = i / (float) (n - 1);
             }
         }
 
-        index =0;
-        for (int i = 0; i < n - 1; i++){
+        index = 0;
+        for (int i = 0; i < n - 1; i++) {
             int offset = i * m;
-            for (int j = 0; j < m - 1; j++){
+            for (int j = 0; j < m - 1; j++) {
                 // j=0, m=4
                 ib[index++] = j + offset;
                 ib[index++] = j + m + offset;
@@ -41,11 +41,10 @@ public class Grid extends Solid {
             }
         }
 
-        lwjglutils.OGLBuffers.Attrib[] attributes ={
-                new OGLBuffers.Attrib("inPosition",2 )
+        lwjglutils.OGLBuffers.Attrib[] attributes = {
+                new OGLBuffers.Attrib("inPosition", 2)
         };
 
         buffers = new OGLBuffers(vb, attributes, ib);
     }
 }
-
