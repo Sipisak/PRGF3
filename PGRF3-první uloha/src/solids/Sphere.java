@@ -13,7 +13,7 @@ public class Sphere extends Solid {
         int numIndices = 6 * stacks * slices;
 
         // Vytvoření pole pro vrcholy a indexy
-        float[] vertices = new float[numVertices * 3]; // Každý vrchol má 3 souřadnice (x, y, z)
+        float[] vertices = new float[numVertices * 3];
         int[] indices = new int[numIndices];
 
         // Generace vrcholů

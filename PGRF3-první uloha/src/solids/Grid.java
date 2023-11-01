@@ -3,7 +3,6 @@ package solids;
 import lwjglutils.OGLBuffers;
 
 public class Grid extends Solid {
-    private int shaderProgram;
 
     /**
      * @param m - počet vrcholů v řádku
