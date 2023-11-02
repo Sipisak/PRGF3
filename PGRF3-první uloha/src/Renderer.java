@@ -1,4 +1,5 @@
 import lwjglutils.OGLTexture2D;
+import lwjglutils.ShaderUtils;
 import org.lwjgl.BufferUtils;
 import solids.*;
 
@@ -19,13 +20,13 @@ import static org.lwjgl.opengl.GL20.*;
 
 public class Renderer extends AbstractRenderer{
 
-	private int shaderProgamTriangle, shaderProgamAxis, shaderProgamGrid, shaderProgamSphere, shaderProgamCube;
+	private int shaderProgamTriangle, shaderProgamAxis, shaderProgamGrid, shaderProgamSphere, shaderProgamCube, shaderProgamLight;
 
 	private Triangle triangle;
 	private Axis axisX, axisY, axisZ;
-	private Grid grid;
-	private Sphere sphere;
-	private Cube cube;
+	private Grid grid, light;
+//	private Sphere sphere;
+//	private Cube cube;
 	private Camera camera;
 	private Mat4 proj;
 	private float time;
@@ -34,6 +35,7 @@ public class Renderer extends AbstractRenderer{
 	boolean mouseButton1 = false;
 	private float sensitivity = 0.1f;
 	private OGLTexture2D texture;
+	private Vec3D lightPosition;
 
 	@Override
     public void init() {
@@ -45,14 +47,14 @@ public class Renderer extends AbstractRenderer{
 		axisZ = new Axis(0.f, 0.f, 1.f,new Col(0.f, 0.f, 1.f));
 		shaderProgamAxis = lwjglutils.ShaderUtils.loadProgram("/axis");
 
-		grid = new Grid(45,45);
+		grid = new Grid(50,50);
 		shaderProgamGrid = lwjglutils.ShaderUtils.loadProgram("/grid");
 
-		sphere = new Sphere(50,50);
-		shaderProgamSphere = lwjglutils.ShaderUtils.loadProgram("/sphere");
-
-		cube = new Cube();
-		shaderProgamCube = lwjglutils.ShaderUtils.loadProgram(/"cube");
+//		sphere = new Sphere(50,50);
+//		shaderProgamSphere = lwjglutils.ShaderUtils.loadProgram("/sphere");
+//
+//		cube = new Cube();
+//		shaderProgamCube = lwjglutils.ShaderUtils.loadProgram("/cube");
 
 		//camera a projekce
 		camera = new Camera()
@@ -63,10 +65,15 @@ public class Renderer extends AbstractRenderer{
 		proj = new Mat4PerspRH(Math.PI / 4 ,height / (float)width, 0.1f, 100.f);
 
 		try {
-			texture = new OGLTexture2D("textures/brick.jpg");
+			texture = new OGLTexture2D("textures/bricks.jpg");
 		} catch (IOException e){
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
+
+		light = new Grid(2,2);
+		shaderProgamLight = ShaderUtils.loadProgram("/light");
+		lightPosition = new Vec3D(0.f, 0.f, 1000.1f);
+
 
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -79,6 +86,7 @@ public class Renderer extends AbstractRenderer{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
 		//drawTriangle();
+		//drawLight();
 		//drawAxis();
 		drawGrid();
 		//drawSphere();
@@ -103,15 +111,27 @@ public class Renderer extends AbstractRenderer{
 		setGlobalUniforms(shaderProgamGrid);
 		int locUTime = glGetUniformLocation(shaderProgamGrid, "uTime");
 		glUniform1f(locUTime,time);
-		texture.bind(shaderProgamGrid, "/textureBricks");
+		texture.bind(shaderProgamGrid, "textureBricks");
+		int locULightPos = glGetUniformLocation(shaderProgamGrid, "u_LightPos");
+		glUniform3f(locULightPos, (float)lightPosition.getX(), (float)lightPosition.getY(), (float)lightPosition.getZ());
 		grid.getBuffers().draw(GL_TRIANGLES, shaderProgamGrid);
 	}
-	private void drawSphere(){
-		glUseProgram(shaderProgamSphere);
-		setGlobalUniforms(shaderProgamSphere);
-		sphere.getBuffers().draw(GL_TRIANGLES, shaderProgamSphere);
+	private void drawLight() {
+		glUseProgram(shaderProgamLight);
+		setGlobalUniforms(shaderProgamLight);
+		light.getBuffers().draw(GL_TRIANGLES, shaderProgamLight);
 	}
-
+//	private void drawSphere(){
+//		glUseProgram(shaderProgamSphere);
+//		setGlobalUniforms(shaderProgamSphere);
+//		sphere.getBuffers().draw(GL_TRIANGLES, shaderProgamSphere);
+//	}
+//	private void drawCube(){
+//		glUseProgram(shaderProgamCube);
+//		setGlobalUniforms(shaderProgamCube);
+//		texture.bind(shaderProgamCube, "/textureBricks");
+//		cube.getBuffers().draw(GL_TRIANGLES, shaderProgamCube);
+//	}
 	private void setGlobalUniforms(int shaderProgram) {
 		int locUView = glGetUniformLocation(shaderProgram, "uView");
 		int locUProj = glGetUniformLocation(shaderProgram, "uProj");
@@ -171,29 +191,29 @@ public class Renderer extends AbstractRenderer{
     private GLFWMouseButtonCallback mbCallback = new GLFWMouseButtonCallback () {
 		@Override
 		public void invoke(long window, int button, int action, int mods) {
-			mouseButton1 = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS;
-
-			if (button==GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS){
-				mouseButton1 = true;
-				DoubleBuffer xBuffer = BufferUtils.createDoubleBuffer(1);
-				DoubleBuffer yBuffer = BufferUtils.createDoubleBuffer(1);
-				glfwGetCursorPos(window, xBuffer, yBuffer);
-				lastX = xBuffer.get(0);
-				lastY = yBuffer.get(0);
-			}
-
-			if (button==GLFW_MOUSE_BUTTON_1 && action == GLFW_RELEASE){
-				mouseButton1 = false;
-				DoubleBuffer xBuffer = BufferUtils.createDoubleBuffer(1);
-				DoubleBuffer yBuffer = BufferUtils.createDoubleBuffer(1);
-				glfwGetCursorPos(window, xBuffer, yBuffer);
-				double x = xBuffer.get(0);
-				double y = yBuffer.get(0);
-				camera = camera.addAzimuth((double) Math.PI * (lastX - x) / width)
-        				.addZenith((double) Math.PI * (lastY - y) / width);
-				lastX = x;
-				lastY = y;
-        	}
+//			mouseButton1 = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS;
+//
+//			if (button==GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS){
+//				mouseButton1 = true;
+//				DoubleBuffer xBuffer = BufferUtils.createDoubleBuffer(1);
+//				DoubleBuffer yBuffer = BufferUtils.createDoubleBuffer(1);
+//				glfwGetCursorPos(window, xBuffer, yBuffer);
+//				lastX = xBuffer.get(0);
+//				lastY = yBuffer.get(0);
+//			}
+//
+//			if (button==GLFW_MOUSE_BUTTON_1 && action == GLFW_RELEASE){
+//				mouseButton1 = false;
+//				DoubleBuffer xBuffer = BufferUtils.createDoubleBuffer(1);
+//				DoubleBuffer yBuffer = BufferUtils.createDoubleBuffer(1);
+//				glfwGetCursorPos(window, xBuffer, yBuffer);
+//				double x = xBuffer.get(0);
+//				double y = yBuffer.get(0);
+//				camera = camera.addAzimuth((double) Math.PI * (lastX - x) / width)
+//        				.addZenith((double) Math.PI * (lastY - y) / width);
+//				lastX = x;
+//				lastY = y;
+//        	}
 		}
 		
 	};
@@ -201,24 +221,24 @@ public class Renderer extends AbstractRenderer{
     private GLFWCursorPosCallback cpCallbacknew = new GLFWCursorPosCallback() {
         @Override
         public void invoke(long window, double x, double y) {
-			if (mouseButton1) {
-				camera = camera.addAzimuth((double) Math.PI * (lastX - x) * sensitivity / width)
-						.addZenith((double) Math.PI * (lastY - y) * sensitivity / width);
-				lastX = x;
-				lastY = y;
-
-
-    		}
+//			if (mouseButton1) {
+//				camera = camera.addAzimuth((double) Math.PI * (lastX - x) * sensitivity / width)
+//						.addZenith((double) Math.PI * (lastY - y) * sensitivity / width);
+//				lastX = x;
+//				lastY = y;
+//
+//
+//    		}
 		}
 
 	};
     
     private GLFWScrollCallback scrollCallback = new GLFWScrollCallback() {
         @Override public void invoke (long window, double dx, double dy) {
-			  if (dy<0)
-        	camera = camera.mulRadius(0.9f);
-        else
-        	camera = camera.mulRadius(1.1f);
+//			  if (dy<0)
+//        	camera = camera.mulRadius(0.9f);
+//        else
+//        	camera = camera.mulRadius(1.1f);
         }
     };
  
