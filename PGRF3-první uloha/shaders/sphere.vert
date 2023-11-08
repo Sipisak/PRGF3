@@ -6,11 +6,14 @@ uniform mat4 uView;
 uniform mat4 uProj;
 uniform mat4 uTransform;
 
+const float PI = 3.14159265359;
+
+
 void main() {
     float radius = 1.0;
 
-    float theta = inPosition.x * 6.28;
-    float phi = inPosition.y * 3.14;
+    float theta = inPosition.x * 2 * PI;
+    float phi = inPosition.y * PI;
 
     float x = radius * sin(phi) * cos(theta);
     float y = radius * sin(phi) * sin(theta);

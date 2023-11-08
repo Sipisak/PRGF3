@@ -27,7 +27,7 @@ public class Renderer extends AbstractRenderer{
 
 	private Triangle triangle;
 	private Axis axisX, axisY, axisZ;
-	private Grid grid, light;
+	private Grid grid, light, sphere;
 
 	private List<SPRenderer> spRenderers = new ArrayList<>();
 	private Camera camera;
@@ -51,21 +51,24 @@ public class Renderer extends AbstractRenderer{
 
 		spRenderers.addAll(
 				Arrays.asList(
-						//new SPRenderer(new Triangle(), "triangle", camera, proj),
+						new SPRenderer(new Triangle(), "triangle", camera, proj),
+						new SPRenderer(new Grid(25, 25), "sphere", camera, proj),
 						new SPRenderer(new Grid(10, 10), "light",camera,proj),
 						new SPRenderer(new Grid(50, 50), "grid", camera, proj,"bricks.jpg"),
-						new SPRenderer(new Grid(25, 30), "elephant", camera, proj),
-						new SPRenderer(new Grid(30, 30), "donut", camera, proj),
-						new SPRenderer(new Grid(30, 30), "spider", camera, proj),
-						new SPRenderer(new Grid(20, 20), "pipe", camera, proj),
-						new SPRenderer(new Grid(25, 25), "sphere", camera, proj),
+//						new SPRenderer(new Grid(25, 30), "elephant", camera, proj),
+//						new SPRenderer(new Grid(30, 30), "donut", camera, proj),
+//						new SPRenderer(new Grid(30, 30), "spider", camera, proj),
+//						new SPRenderer(new Grid(20, 20), "pipe", camera, proj),
+//						new SPRenderer(new Grid(25, 25), "morph", camera, proj),
 						new SPRenderer(new Axis(1.f, 0.f, 0.f, new Col(1.f, 0, 0)), "axis", camera, proj),
 						new SPRenderer(new Axis(0.f, 1.f, 0.f, new Col(0, 1.f, 0)), "axis", camera, proj),
 						new SPRenderer(new Axis(0.f, 0.f, 1.f, new Col(0, 0, 1.f)), "axis", camera, proj)
 				)
 		);
+		sphere = new Grid(25,25);
+		shaderProgamSphere = ShaderUtils.loadProgram("/sphere");
 
-		light = new Grid(2,2);
+		light = new Grid(10,10);
 		shaderProgamLight = ShaderUtils.loadProgram("/light");
 		lightPosition = new Vec3D(0.f, 0.f, 1000.1f);
 
@@ -78,7 +81,7 @@ public class Renderer extends AbstractRenderer{
 		spRenderers.get(5).setTransform(new Mat4Transl(5, 10, 2));
 		
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 
 	@Override
