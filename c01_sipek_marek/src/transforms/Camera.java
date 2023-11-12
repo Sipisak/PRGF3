@@ -188,7 +188,7 @@ public class Camera {
 	/**
 	 * Returns a new camera moved in the direction of the view vector by the
 	 * given distance
-	 * 
+	 *
 	 * @param speed
 	 *            distance to move by
 	 * @return new Camera instance
@@ -420,6 +420,14 @@ public class Camera {
 	@Override
 	public String toString() {
 		return toString("%4.2f");
+	}
+
+
+	public Vec3D getForward() {
+		double x = -Math.sin(azimuth) * Math.cos(zenith);
+		double y = Math.sin(zenith);
+		double z = -Math.cos(azimuth) * Math.cos(zenith);
+		return new Vec3D(-x, -y, -z).normalized().get();
 	}
 
 }

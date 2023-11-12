@@ -13,17 +13,6 @@ public class Grid extends Solid {
         float[] vb = new float[4 * m * n];
         // ib
         int[] ib = new int[6 * (m - 1) * (n - 1)];
-
-        //generování vb
-//        int index = 0;
-//        // rozsah od 0 od 1
-//        for (int i = 0; i < n - 1; i++) {
-//            for (int j = 0; j < m - 1; j++) {
-//                vb[index++] = j / (float) (m - 1);
-//                vb[index++] = i / (float) (n - 1);
-//            }
-//        }
-
         int index = 0;
         for (int i = 0; i < n; i++) {
             float x = i / (float) (n - 1);

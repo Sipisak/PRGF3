@@ -23,8 +23,8 @@ void main() {
     // převést na rozsah <-1; 1>
     vec2 pos = inPosition * 2 - 1;
     // spočítat z
-    float z = 0.5 * cos(sqrt(20 * pow(pos.x, 2) + 20 * pow(pos.y, 2)) + uTime);
-    //float z = 0.f;
+    //float z = 0.5 * cos(sqrt(20 * pow(pos.x, 2) + 20 * pow(pos.y, 2)) + uTime);
+    float z = 0.f;
 
     // Phong
     vec4 pos_W = vec4(pos, z, 1.);

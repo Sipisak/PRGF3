@@ -20,7 +20,7 @@ float quadraticAttenuation = 0.001;
 
 void main() {
     vec4 baseColor = vec4(0.2f, 0.7f, 0.f, 1.f);
-    vec4 basecolor =texture(textureBricks, texCoord);
+    //vec4 basecolor =texture(textureBricks, texCoord);
 
     //diffuse
     vec3 l = normalize(toLightVector);
@@ -34,6 +34,6 @@ void main() {
     float att = 1.0;
 
     outColor = (ambient + att * (diffuse + specular)) * baseColor;
-    outColor = vec4(debugColor, 1.f);
+    //outColor = vec4(debugColor, 1.f);
 }
 

@@ -12,49 +12,53 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 public class LwjglWindow {
 
-	public static int WIDTH = 600;
-    public static int HEIGHT = 400;
+	public static int WIDTH = 1920;
+	public static int HEIGHT = 1080;
 
-    // The window handle
+	// The window handle
 	private long window;
 	private AbstractRenderer renderer;
-	
-    private static boolean DEBUG = false;
 
-    static {
-        if (DEBUG) {
-            System.setProperty("org.lwjgl.util.Debug", "true");
-            System.setProperty("org.lwjgl.util.NoChecks", "false");
-            System.setProperty("org.lwjgl.util.DebugLoader", "true");
-            System.setProperty("org.lwjgl.util.DebugAllocator", "true");
-            System.setProperty("org.lwjgl.util.DebugStack", "true");
-            Configuration.DEBUG_MEMORY_ALLOCATOR.set(true);
-        }
-    }
+	private static boolean DEBUG = false;
 
-	public LwjglWindow(AbstractRenderer renderer) { this(WIDTH, HEIGHT, renderer, false); }
+	static {
+		if (DEBUG) {
+			System.setProperty("org.lwjgl.util.Debug", "true");
+			System.setProperty("org.lwjgl.util.NoChecks", "false");
+			System.setProperty("org.lwjgl.util.DebugLoader", "true");
+			System.setProperty("org.lwjgl.util.DebugAllocator", "true");
+			System.setProperty("org.lwjgl.util.DebugStack", "true");
+			Configuration.DEBUG_MEMORY_ALLOCATOR.set(true);
+		}
+	}
 
-	public LwjglWindow(AbstractRenderer renderer, boolean debug) { this(WIDTH, HEIGHT, renderer, debug); }
+	public LwjglWindow(AbstractRenderer renderer) {
+		this(WIDTH, HEIGHT, renderer, false);
+	}
+
+	public LwjglWindow(AbstractRenderer renderer, boolean debug) {
+		this(WIDTH, HEIGHT, renderer, debug);
+	}
 
 	public LwjglWindow(int width, int height, AbstractRenderer renderer, boolean debug) {
 		this.renderer = renderer;
 		DEBUG = debug;
 		WIDTH = width;
 		HEIGHT = height;
-		this.renderer.setWidth(WIDTH);
-		this.renderer.setHeight(HEIGHT);
+		this.renderer.setWidth(width);
+		this.renderer.setHeight(height);
 		if (DEBUG)
 			System.err.println("Run in debugging mode");
 		run();
 	}
-	
+
 	public void run() {
 		init();
-		
+
 		loop();
 
 		renderer.dispose();
-		
+
 		// Free the window callbacks and destroy the window
 		glfwFreeCallbacks(window);
 		glfwDestroyWindow(window);
@@ -62,7 +66,7 @@ public class LwjglWindow {
 		// Terminate GLFW and free the error callback
 		glfwTerminate();
 		glfwSetErrorCallback(null).free();
-		
+
 	}
 
 	private void init() {
@@ -92,44 +96,44 @@ public class LwjglWindow {
 		glfwSetMouseButtonCallback(window,renderer.getMouseCallback());
 		glfwSetCursorPosCallback(window,renderer.getCursorCallback());
 		glfwSetScrollCallback(window,renderer.getScrollCallback());
-		
+
 		if (DEBUG)
 			glfwSetErrorCallback(new GLFWErrorCallback() {
-	            GLFWErrorCallback delegate = GLFWErrorCallback.createPrint(System.err);
+				GLFWErrorCallback delegate = GLFWErrorCallback.createPrint(System.err);
 
-	            @Override
-	            public void invoke(int error, long description) {
-	                if (error == GLFW_VERSION_UNAVAILABLE)
-	                    System.err.println("GLFW_VERSION_UNAVAILABLE: This demo requires OpenGL 2.0 or higher.");
-	                if (error == GLFW_NOT_INITIALIZED)
-	                    System.err.println("");
-	                if (error == GLFW_NO_CURRENT_CONTEXT)
-	                    System.err.println("GLFW_NO_CURRENT_CONTEXT");
-				    if (error == GLFW_INVALID_ENUM)
-				        System.err.println("GLFW_INVALID_ENUM");
-				    if (error == GLFW_INVALID_VALUE)
-				        System.err.println("GLFW_INVALID_VALUE");
-				    if (error == GLFW_OUT_OF_MEMORY)
-				        System.err.println("GLFW_OUT_OF_MEMORY");
-				    if (error == GLFW_API_UNAVAILABLE)
-				        System.err.println("GLFW_API_UNAVAILABLE");
-				    if (error == GLFW_VERSION_UNAVAILABLE)
-				        System.err.println("GLFW_VERSION_UNAVAILABLE");
-				    if (error == GLFW_PLATFORM_ERROR)
-				        System.err.println("GLFW_PLATFORM_ERROR");
-				    if (error == GLFW_FORMAT_UNAVAILABLE)
-				        System.err.println("GLFW_FORMAT_UNAVAILABLE");
-				    if (error == GLFW_FORMAT_UNAVAILABLE)
-				        System.err.println("GLFW_FORMAT_UNAVAILABLE");
-	    
-	                delegate.invoke(error, description);
-	            }
+				@Override
+				public void invoke(int error, long description) {
+					if (error == GLFW_VERSION_UNAVAILABLE)
+						System.err.println("GLFW_VERSION_UNAVAILABLE: This demo requires OpenGL 2.0 or higher.");
+					if (error == GLFW_NOT_INITIALIZED)
+						System.err.println("");
+					if (error == GLFW_NO_CURRENT_CONTEXT)
+						System.err.println("GLFW_NO_CURRENT_CONTEXT");
+					if (error == GLFW_INVALID_ENUM)
+						System.err.println("GLFW_INVALID_ENUM");
+					if (error == GLFW_INVALID_VALUE)
+						System.err.println("GLFW_INVALID_VALUE");
+					if (error == GLFW_OUT_OF_MEMORY)
+						System.err.println("GLFW_OUT_OF_MEMORY");
+					if (error == GLFW_API_UNAVAILABLE)
+						System.err.println("GLFW_API_UNAVAILABLE");
+					if (error == GLFW_VERSION_UNAVAILABLE)
+						System.err.println("GLFW_VERSION_UNAVAILABLE");
+					if (error == GLFW_PLATFORM_ERROR)
+						System.err.println("GLFW_PLATFORM_ERROR");
+					if (error == GLFW_FORMAT_UNAVAILABLE)
+						System.err.println("GLFW_FORMAT_UNAVAILABLE");
+					if (error == GLFW_FORMAT_UNAVAILABLE)
+						System.err.println("GLFW_FORMAT_UNAVAILABLE");
 
-	            @Override
-	            public void free() {
-	                delegate.free();
-	            }
-	        });
+					delegate.invoke(error, description);
+				}
+
+				@Override
+				public void free() {
+					delegate.free();
+				}
+			});
 		//TODO
 		/*other debug modes, some may have a very negative impact on performance
 		 * see https://github.com/LWJGL/lwjgl3-wiki/wiki/2.5.-Troubleshooting
@@ -140,7 +144,7 @@ public class LwjglWindow {
 		Configuration.DEBUG_STACK.set(true);
 		Configuration.DEBUG_STREAM.set(true);
 		*/
-		
+
 		// Get the thread stack and push a new frame
 		try ( MemoryStack stack = stackPush() ) {
 			IntBuffer pWidth = stack.mallocInt(1); // int*
@@ -154,9 +158,9 @@ public class LwjglWindow {
 
 			// Center the window
 			glfwSetWindowPos(
-				window,
-				(vidmode.width() - pWidth.get(0)) / 2,
-				(vidmode.height() - pHeight.get(0)) / 2
+					window,
+					(vidmode.width() - pWidth.get(0)) / 2,
+					(vidmode.height() - pHeight.get(0)) / 2
 			);
 		} // the stack frame is popped automatically
 
@@ -188,9 +192,9 @@ public class LwjglWindow {
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
 		while ( !glfwWindowShouldClose(window) ) {
-			
+
 			renderer.display();
-			
+
 			glfwSwapBuffers(window); // swap the color buffers
 
 			// Poll for window events. The key callback above will only be
