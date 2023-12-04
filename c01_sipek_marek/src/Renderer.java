@@ -33,10 +33,12 @@ import static org.lwjgl.opengl.GL20.*;
  */
 public class Renderer extends AbstractRenderer{
 
-	private int shaderProgamTriangle, shaderProgamAxis, shaderProgamGrid, shaderProgramLight, shaderProgamCylinder, shaderProgamDome, shaderProgamDonut, shaderProgamElephant,shaderProgamExplosion,shaderProgamSphere,shaderProgamMorph;
+	private int shaderProgamTriangle, shaderProgamAxis, shaderProgamGrid, shaderProgramLight, shaderProgamCylinder, shaderProgamDome, shaderProgamDonut, shaderProgamElephant,shaderProgamExplosion,shaderProgamSphere,shaderProgamMorph, shaderProgamCube;
 	private Triangle triangle;
 	private Axis axisX, axisY, axisZ;
 	private Grid grid, light, elephant, explosion, dome, donut,cylinder, morph, sphere;
+	private Cube cube;
+
 	private Camera camera;
 	private Mat4 projection;
 	private float time;
@@ -80,6 +82,8 @@ public class Renderer extends AbstractRenderer{
 		shaderProgamSphere = lwjglutils.ShaderUtils.loadProgram("/sphere");
 		morph = new Grid(50, 50);
 		shaderProgamMorph = lwjglutils.ShaderUtils.loadProgram("/morph");
+		cube = new Cube();
+		shaderProgamCube = lwjglutils.ShaderUtils.loadProgram("/cube");
 
 		// cam, proj
 		camera = new Camera()
@@ -117,7 +121,8 @@ public class Renderer extends AbstractRenderer{
 				this::drawExplosion,
 				this::drawElephant,
 				this::drawSphere,
-				this::drawMorph
+				this::drawMorph,
+				this::drawCube
 		));
 		glfwSetKeyCallback(window, keyCallback);
 
@@ -172,6 +177,11 @@ public class Renderer extends AbstractRenderer{
 		glUseProgram(shaderProgamCylinder);
 		setGlobalUniforms(shaderProgamCylinder);
 		grid.getBuffers().draw(GL_TRIANGLES, shaderProgamCylinder);
+	}
+	private void drawCube() {
+		glUseProgram(shaderProgamCube);
+		setGlobalUniforms(shaderProgamCube);
+		cube.getBuffers().draw(GL_TRIANGLES, shaderProgamCube);
 	}
 
 	private void drawDome() {
