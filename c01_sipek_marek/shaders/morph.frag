@@ -1,8 +1,12 @@
 #version 330
+in vec4 vertColor;
+in vec2 texCoord;
+out vec4 color;
+uniform sampler2D textureBricks;
 
-in vec3 color;
-out vec4 FragColor;
 
 void main() {
-    FragColor = vec4(color, 1.0);
+    //color = texture(textureBricks, texCoord);
+    color = vec4(vertColor);
 }
+

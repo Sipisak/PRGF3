@@ -1,8 +1,10 @@
 package solids;
 
 import lwjglutils.OGLBuffers;
+import transforms.Mat4;
 
 public class Grid extends Solid {
+    private Mat4 transformMatrix = new Mat4();
 
     /**
      * @param m - počet vrcholů v řádku
@@ -50,5 +52,12 @@ public class Grid extends Solid {
         };
 
         buffers = new OGLBuffers(vb, attributes, ib);
+    }
+    public void updateTransformMatrix(Mat4 newTransform) {
+        transformMatrix = newTransform;
+    }
+
+    public Mat4 getTransformMatrix() {
+        return transformMatrix;
     }
 }

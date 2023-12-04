@@ -1,42 +1,45 @@
 #version 330
 
 in vec2 inPosition;
-out vec3 color;
 
+uniform float uTime;
 uniform mat4 uView;
 uniform mat4 uProj;
-uniform float uTime;
 
-const float PI = 3.14159265359;
+out vec4 vertColor;
+out vec2 texCoord;
 
-vec3 color1 = vec3(1.f, 0.f, 0.f);  // Red
-vec3 color2 = vec3(0.f, 0.f, 1.f);  // Blue
+const float PI = 3.14159;
 
-vec3 spheretocartezian(float R, float azimut, float zenit){
-    float x = R * sin(zenit) * cos(azimut);
-    float y = R * sin(zenit) * sin(azimut);
-    float z = R * cos(zenit);
-    return vec3(x, y, z);
+vec3 sphere2cartezian(float r, float a, float z){
+    return vec3(
+    r * sin(z) * cos(a),
+    r * sin(z) * sin(a),
+    r * cos(z)
+    );
 }
 
-vec3 fce(float azimut, float zenit){
-    float R = 3 * cos(4 * azimut);
-    return vec3(R / 3, zenit, azimut);
+vec3 fce(float a, float z){
+    float r = 3 + cos(4 * a);
+    return vec3(r / 3, a, z) ;
 }
 
-void main(){
+void main() {
     vec3 position = vec3(inPosition, 0.f);
-    float zenit = position.x * PI;
-    float azimut = position.y * 2.0 * PI;
 
-    vec3 pos1 = spheretocartezian(1.f, azimut, zenit);
-    vec3 pos = fce(azimut, zenit);
-    vec3 pos2 = spheretocartezian(pos.x, pos.z, pos.y);
+    float a = position.x * PI * 2;
+    float z = position.y * PI;
+    vec3 pos1 = sphere2cartezian(1.f, a, z);
+    vec3 pos = fce(a, z);
+    vec3 pos2 = sphere2cartezian(pos.x, pos.y, pos.z);
 
-    float alpha = 0.5 * (sin(uTime / 500.0) + 1.0);
-    vec3 result = mix(pos2, pos1, alpha);
+    float alpha = (sin(uTime / 500.) + 1) / 2.;
+    vec3 result = mix(pos1, pos2, alpha);
+    gl_Position = uProj * uView * vec4(pos1, 1.0);
 
-    gl_Position = uProj * uView * vec4(result, 1.0);
+    vec4 color1 = vec4(0.9f, 0.9f, 0.f, 1.f);
+    vec4 color2 = vec4(0.9f, 0.f, 0.9f, 1.f);
+    vertColor = mix(color1, color2, alpha);
 
-    color = mix(color1, color2, alpha);
+    texCoord = inPosition;
 }

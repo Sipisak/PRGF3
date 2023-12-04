@@ -17,7 +17,7 @@ void main() {
     // Výška (upravena na normální rozsah [-1, 1])
     float height = inPosition.y * 2.0 - 1.0;
 
-    // Výpočet polohy v cylindrických souřadnicích
+
     float x = radius * cos(theta);
     float y = radius * sin(theta);
     float z = height;

@@ -24,3 +24,5 @@ void main() {
     lighting = diff + ambient + spec;
     outColor = vec4(lighting, 1.0);
 }
+
+

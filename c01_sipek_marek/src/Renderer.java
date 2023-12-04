@@ -38,7 +38,6 @@ public class Renderer extends AbstractRenderer{
 	private Axis axisX, axisY, axisZ;
 	private Grid grid, light, elephant, explosion, dome, donut,cylinder, morph, sphere;
 	private Cube cube;
-
 	private Camera camera;
 	private Mat4 projection;
 	private float time;
@@ -48,6 +47,7 @@ public class Renderer extends AbstractRenderer{
 	private	OGLTexture2D texture;
 	private double ox, oy;
 	private boolean mouseButton1 = false;
+	private boolean animationEnabled = true;
 	private final Mat4 model = new Mat4Identity();
 	private int currentObjectIndex = 0;
 	private final List<Runnable> renderTasks = new ArrayList<>();
@@ -112,18 +112,18 @@ public class Renderer extends AbstractRenderer{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		renderTasks.addAll(
 				Arrays.asList(
-				this::drawAxis,
-				this::drawGrid,
-				this::drawTriangle,
-				this::drawCylinder,
-				this::drawDome,
-				this::drawDonut,
-				this::drawExplosion,
-				this::drawElephant,
-				this::drawSphere,
-				this::drawMorph,
-				this::drawCube
-		));
+						this::drawAxis,
+						this::drawGrid,
+						this::drawTriangle,
+						this::drawCylinder,
+						this::drawDome,
+						this::drawDonut,
+						this::drawExplosion,
+						this::drawElephant,
+						this::drawSphere,
+						this::drawMorph,
+						this::drawCube
+				));
 		glfwSetKeyCallback(window, keyCallback);
 
 	}
@@ -133,7 +133,7 @@ public class Renderer extends AbstractRenderer{
 
 	@Override
 	public void display() {
-		time += 0.01f;
+
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
@@ -141,6 +141,10 @@ public class Renderer extends AbstractRenderer{
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+
+		if (animationEnabled) {
+			time += 0.01f;
+		}
 
 		Vec3D forward = camera.getForward().mul(0.1f);
 		objectPosition = objectPosition.add(forward);
@@ -213,10 +217,9 @@ public class Renderer extends AbstractRenderer{
 	private void drawMorph() {
 		glUseProgram(shaderProgamMorph);
 		setGlobalUniforms(shaderProgamMorph);
+		texture.bind(shaderProgamMorph, "textureBricks");
 		grid.getBuffers().draw(GL_TRIANGLES, shaderProgamMorph);
 	}
-
-
 
 	private void drawLight() {
 		glUseProgram(shaderProgramLight);
@@ -245,14 +248,7 @@ public class Renderer extends AbstractRenderer{
 		@Override
 		public void invoke(long window, int key, int scancode, int action, int mods) {
 			switch (key) {
-				case GLFW_KEY_LEFT->
-						objectPosition = objectPosition.add(new Vec3D(-0.1f, 0, 0));
-				case GLFW_KEY_RIGHT->
-						objectPosition = objectPosition.add(new Vec3D(0.1f, 0, 0));
-				case GLFW_KEY_UP->
-						objectPosition = objectPosition.add(new Vec3D(0, 0.1f, 0));
-				case GLFW_KEY_DOWN->
-						objectPosition = objectPosition.add(new Vec3D(0, -0.1f, 0));
+
 				case GLFW_KEY_W -> // W
 						camera = camera.forward(0.1f);
 				case GLFW_KEY_A -> // A
@@ -266,17 +262,20 @@ public class Renderer extends AbstractRenderer{
 				case GLFW_KEY_E -> // E
 						camera = camera.down(0.1f);
 
-				case GLFW_KEY_O -> {
+				case GLFW_KEY_O -> { // O
+
 				}
-				case GLFW_KEY_P -> {
-					 }
+				case GLFW_KEY_P -> { // P
+
+				}
 			}
 
 			if (action == GLFW_PRESS) {
 				switch (key) {
-
-					case GLFW_KEY_Z -> {}
-					case GLFW_KEY_C -> {}
+					case GLFW_KEY_Z -> { // Y
+						projection = new Mat4OrthoRH(Math.PI / 4, height / (float) width, 0.1f, 100);}
+					case GLFW_KEY_C -> { // C
+						projection = new Mat4PerspRH(Math.PI / 4, height / (float) width, 0.1f, 100);}
 					case GLFW_KEY_B -> // B
 							glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 					case GLFW_KEY_N -> // N
@@ -286,6 +285,26 @@ public class Renderer extends AbstractRenderer{
 						glPointSize(5.0f);
 						glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 
+					}
+					case GLFW_KEY_G -> {
+						animationEnabled = !animationEnabled;
+						System.out.println("Animation " + (animationEnabled ? "enabled" : "disabled"));
+					}
+					case GLFW_KEY_H -> {
+						animationEnabled = false;
+						System.out.println("Animation disabled");
+					}
+					case GLFW_KEY_J -> {
+						if (animationEnabled) {
+							time += 0.1f;
+							System.out.println("Increased animation");
+						}
+					}
+					case GLFW_KEY_K -> {
+						if (animationEnabled) {
+							time -= 0.1f;
+							System.out.println("Decreased animation");
+						}
 					}
 					case GLFW_KEY_SPACE -> {
 						renderNextObject();
