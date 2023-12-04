@@ -219,10 +219,10 @@ public class OGLTextureCube implements OGLTexture {
 	public OGLTextureCube(String fileName, String[] suffixes) throws IOException {
 		this();
 		String baseName=fileName.substring(0,fileName.lastIndexOf('.'));
-    	String suffix=fileName.substring(fileName.lastIndexOf('.')+1,fileName.length());
+    	String suffix=fileName.substring(fileName.lastIndexOf('.')+1);
 		String[] fullNames = new String[suffixes.length];
 		for (int i = 0; i < suffixes.length; i++) {
-    		fullNames[i] = new String(baseName + suffixes[i] + "." + suffix);
+    		fullNames[i] = baseName + suffixes[i] + "." + suffix;
     	}
 		readTextures(fullNames);
 	}
@@ -301,7 +301,7 @@ public class OGLTextureCube implements OGLTexture {
 	}	
 	
 	@Override
-	public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
 		super.finalize();
 		//if (glIsTexture(textureID))
 		//	glDeleteTextures(textureID);

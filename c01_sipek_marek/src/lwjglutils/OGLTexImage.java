@@ -20,5 +20,5 @@ public interface OGLTexImage<OGLTexImageType> {
 	<B extends Buffer> void setDataBuffer(B buffer);
 	<B extends Buffer> B getDataBuffer();
 	Format<OGLTexImageType> getFormat();
-	public void flipY();
+	void flipY();
 }

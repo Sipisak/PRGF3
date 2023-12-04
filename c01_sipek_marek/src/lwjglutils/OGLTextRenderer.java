@@ -114,7 +114,7 @@ public class OGLTextRenderer {
 		}
 
 		@Override
-		public void finalize() throws Throwable {
+        protected void finalize() throws Throwable {
 			super.finalize();
 			//if (glIsProgram(shaderProgram))
 			//	glDeleteProgram(shaderProgram);
@@ -282,7 +282,7 @@ public class OGLTextRenderer {
 	}
 	
 	@Override
-	public void finalize() throws Throwable{
+    protected void finalize() throws Throwable{
 		super.finalize();
 		viewer.finalize();
 		//if (glIsTexture(textureID))

@@ -482,7 +482,7 @@ public class Quat {
 	 */
 	public Quat squad(Quat q, Quat q1, Quat q2, double t) {
 		return new Quat(this.slerp(q, t).slerp(q1.slerp(q2, t),
-				(double) (2 * t * (1 - t))));
+                2 * t * (1 - t)));
 	}
 
 	private Quat quadrangle(Quat q1, Quat q2) {
@@ -496,7 +496,7 @@ public class Quat {
 		Quat s1 = this.quadrangle(q1, q2);
 		Quat s2 = q2.quadrangle(this, q3);
 		return new Quat(this.slerp(q2, t).slerp(s1.slerp(s2, t),
-				(double) (2 * t * (1 - t))));
+                2 * t * (1 - t)));
 	}
 
 	/**

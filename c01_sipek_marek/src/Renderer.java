@@ -33,10 +33,12 @@ import static org.lwjgl.opengl.GL20.*;
  */
 public class Renderer extends AbstractRenderer{
 
-	private int shaderProgamTriangle, shaderProgamAxis, shaderProgamGrid, shaderProgramLight, shaderProgamCylinder, shaderProgamDome, shaderProgamDonut, shaderProgamElephant,shaderProgamExplosion,shaderProgamSphere,shaderProgamMorph;
+	private int shaderProgamTriangle, shaderProgamAxis, shaderProgamGrid, shaderProgramLight, shaderProgamCylinder, shaderProgamDome, shaderProgamDonut, shaderProgamElephant,shaderProgamExplosion,shaderProgamSphere,shaderProgamMorph, shaderProgamCube;
 	private Triangle triangle;
 	private Axis axisX, axisY, axisZ;
 	private Grid grid, light, elephant, explosion, dome, donut,cylinder, morph, sphere;
+	private Cube cube;
+
 	private Camera camera;
 	private Mat4 projection;
 	private float time;
@@ -46,9 +48,9 @@ public class Renderer extends AbstractRenderer{
 	private	OGLTexture2D texture;
 	private double ox, oy;
 	private boolean mouseButton1 = false;
-	private Mat4 model = new Mat4Identity();
+	private final Mat4 model = new Mat4Identity();
 	private int currentObjectIndex = 0;
-	private List<Runnable> renderTasks = new ArrayList<>();
+	private final List<Runnable> renderTasks = new ArrayList<>();
 	Vec3D objectPosition = new Vec3D(0.0f, 0.0f, 0.0f);
 
 
@@ -80,6 +82,8 @@ public class Renderer extends AbstractRenderer{
 		shaderProgamSphere = lwjglutils.ShaderUtils.loadProgram("/sphere");
 		morph = new Grid(50, 50);
 		shaderProgamMorph = lwjglutils.ShaderUtils.loadProgram("/morph");
+		cube = new Cube();
+		shaderProgamCube = lwjglutils.ShaderUtils.loadProgram("/cube");
 
 		// cam, proj
 		camera = new Camera()
@@ -117,7 +121,8 @@ public class Renderer extends AbstractRenderer{
 				this::drawExplosion,
 				this::drawElephant,
 				this::drawSphere,
-				this::drawMorph
+				this::drawMorph,
+				this::drawCube
 		));
 		glfwSetKeyCallback(window, keyCallback);
 
@@ -172,6 +177,11 @@ public class Renderer extends AbstractRenderer{
 		glUseProgram(shaderProgamCylinder);
 		setGlobalUniforms(shaderProgamCylinder);
 		grid.getBuffers().draw(GL_TRIANGLES, shaderProgamCylinder);
+	}
+	private void drawCube() {
+		glUseProgram(shaderProgamCube);
+		setGlobalUniforms(shaderProgamCube);
+		cube.getBuffers().draw(GL_TRIANGLES, shaderProgamCube);
 	}
 
 	private void drawDome() {
@@ -231,7 +241,7 @@ public class Renderer extends AbstractRenderer{
 		glUniformMatrix4fv(locUTransform, false, model.floatArray());
 	}
 
-	private GLFWKeyCallback   keyCallback = new GLFWKeyCallback() {
+	private final GLFWKeyCallback   keyCallback = new GLFWKeyCallback() {
 		@Override
 		public void invoke(long window, int key, int scancode, int action, int mods) {
 			switch (key) {
@@ -287,17 +297,17 @@ public class Renderer extends AbstractRenderer{
 		}
 	};
 	private void renderNextObject() {
-		// Update the current object index for the next key press
+
 		currentObjectIndex = (currentObjectIndex + 1) % renderTasks.size();
 	}
 
-	private GLFWWindowSizeCallback wsCallback = new GLFWWindowSizeCallback() {
+	private final GLFWWindowSizeCallback wsCallback = new GLFWWindowSizeCallback() {
 		@Override
 		public void invoke(long window, int w, int h) {
 		}
 	};
 
-	private GLFWMouseButtonCallback mbCallback = new GLFWMouseButtonCallback() {
+	private final GLFWMouseButtonCallback mbCallback = new GLFWMouseButtonCallback() {
 		@Override
 		public void invoke(long window, int button, int action, int mods) {
 			mouseButton1 = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS;
@@ -318,8 +328,8 @@ public class Renderer extends AbstractRenderer{
 				glfwGetCursorPos(window, xBuffer, yBuffer);
 				double x = xBuffer.get(0);
 				double y = yBuffer.get(0);
-				camera = camera.addAzimuth((double) Math.PI * (ox - x) / width)
-						.addZenith((double) Math.PI * (oy - y) / width);
+				camera = camera.addAzimuth(Math.PI * (ox - x) / width)
+						.addZenith(Math.PI * (oy - y) / width);
 
 				ox = x;
 				oy = y;
@@ -328,7 +338,7 @@ public class Renderer extends AbstractRenderer{
 
 	};
 
-	private GLFWCursorPosCallback cpCallbacknew = new GLFWCursorPosCallback() {
+	private final GLFWCursorPosCallback cpCallbacknew = new GLFWCursorPosCallback() {
 		@Override
 		public void invoke(long window, double x, double y) {
 			if (mouseButton1) {
@@ -341,7 +351,7 @@ public class Renderer extends AbstractRenderer{
 		}
 	};
 
-	private GLFWScrollCallback scrollCallback = new GLFWScrollCallback() {
+	private final GLFWScrollCallback scrollCallback = new GLFWScrollCallback() {
 		@Override
 		public void invoke(long window, double dx, double dy) {
 		}

@@ -110,13 +110,13 @@ public class Camera {
 		this.zenith = zenith;
 		this.radius = radius;
 		this.firstPerson = firstPerson;
-		viewVector = new Vec3D((double) (Math.cos(azimuth) * Math.cos(zenith)),
-				(double) (Math.sin(azimuth) * Math.cos(zenith)),
-				(double) Math.sin(zenith));
+		viewVector = new Vec3D(Math.cos(azimuth) * Math.cos(zenith),
+                Math.sin(azimuth) * Math.cos(zenith),
+                Math.sin(zenith));
 		final Vec3D upVector = new Vec3D(
-				(double) (Math.cos(azimuth) * Math.cos(zenith + Math.PI / 2)),
-				(double) (Math.sin(azimuth) * Math.cos(zenith + Math.PI / 2)),
-				(double) Math.sin(zenith + Math.PI / 2));
+                Math.cos(azimuth) * Math.cos(zenith + Math.PI / 2),
+                Math.sin(azimuth) * Math.cos(zenith + Math.PI / 2),
+                Math.sin(zenith + Math.PI / 2));
 		if (firstPerson) {
 			eye = new Vec3D(pos);
 			view = new Mat4ViewRH(pos, viewVector.mul(radius), upVector);
@@ -319,8 +319,8 @@ public class Camera {
 	 * @return new Camera instance
 	 */
 	public Camera right(final double speed) {
-		return new Camera(this, pos.add(new Vec3D((double) Math.cos(azimuth
-				- Math.PI / 2), (double) Math.sin(azimuth - Math.PI / 2), 0.0)
+		return new Camera(this, pos.add(new Vec3D(Math.cos(azimuth
+				- Math.PI / 2), Math.sin(azimuth - Math.PI / 2), 0.0)
 				.mul(speed)));
 	}
 

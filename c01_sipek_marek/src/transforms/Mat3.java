@@ -11,7 +11,7 @@ import java.util.Optional;
  * @version 2016
  */
 public class Mat3 {
-	protected final double mat[][] = new double[3][3];
+	protected final double[][] mat = new double[3][3];
 
 	/**
 	 * Creates a zero 3x3 matrix
@@ -63,8 +63,7 @@ public class Mat3 {
 	 */
 	public Mat3(final Mat3 m) {
 		for (int i = 0; i < 3; i++)
-			for (int j = 0; j < 3; j++)
-				mat[i][j] = m.mat[i][j];
+            System.arraycopy(m.mat[i], 0, mat[i], 0, 3);
 	}
 
 	/**
@@ -76,8 +75,7 @@ public class Mat3 {
 	public Mat3(final double[] m) {
 		assert(m.length >= 9);
 		for (int i = 0; i < 3; i++)
-			for (int j = 0; j < 3; j++)
-				mat[i][j] = m[i * 3 + j];
+            System.arraycopy(m, i * 3 + 0, mat[i], 0, 3);
 	}
 
 	/**
@@ -90,8 +88,7 @@ public class Mat3 {
 		assert(m.length >= 3);
 		for (int i = 0; i < 3; i++) {
 			assert(m[i].length >= 3);
-			for (int j = 0; j < 3; j++)
-				mat[i][j] = m[i][j];
+            System.arraycopy(m[i], 0, mat[i], 0, 3);
 		}
 	}
 	
@@ -103,8 +100,7 @@ public class Mat3 {
 	 */
 	public Mat3(final Mat4 m) {
 		for (int i = 0; i < 3; i++)
-			for (int j = 0; j < 3; j++)
-				mat[i][j] = m.mat[i][j];
+            System.arraycopy(m.mat[i], 0, mat[i], 0, 3);
 	}
 	
 	

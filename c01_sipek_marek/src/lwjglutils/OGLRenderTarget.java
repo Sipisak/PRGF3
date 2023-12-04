@@ -31,7 +31,7 @@ public class OGLRenderTarget {
 
 	public <OGLTexImageType extends OGLTexImage<OGLTexImageType>> OGLRenderTarget(int count,
 			OGLTexImageType texImage) {
-		this(texImage.getWidth(), texImage.getHeight(), count, Arrays.asList(texImage), texImage.getFormat());
+		this(texImage.getWidth(), texImage.getHeight(), count, List.of(texImage), texImage.getFormat());
 	}
 
 	public <OGLTexImageType extends OGLTexImage<OGLTexImageType>> OGLRenderTarget(OGLTexImageType[] texImage) {
@@ -116,7 +116,7 @@ public class OGLRenderTarget {
 	public int numberColorTextures(){ return colorBuffers.length; }
 	@Override
 	public String toString() {
-		String text = new String();
+		String text = "";
 		text += String.format(Locale.US, 
 				 "OGLRenderTarget: " + "[" + getWidth() + "x" +
 						 getHeight() + "] \n");
@@ -129,7 +129,7 @@ public class OGLRenderTarget {
 		return  text;
 	}
 	@Override
-	public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
 		super.finalize();
 		//if (glIsFramebuffer(frameBuffer))
 		//	glDeleteFramebuffers(frameBuffer);

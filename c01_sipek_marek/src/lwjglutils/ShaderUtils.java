@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.function.IntConsumer;
 
@@ -393,18 +394,13 @@ public final class ShaderUtils {
 		}
 
 		BufferedReader brv = null;
-		try {
-			brv = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return null;
-		}
+        brv = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
 
-		String line;
+        String line;
 		ArrayList<String> shader = new ArrayList<>();
 		try {
 			while ((line = brv.readLine()) != null) {
-				shader.add(new String(line));
+				shader.add(line);
 			}
 			is.close();
 			brv.close();
@@ -435,7 +431,7 @@ public final class ShaderUtils {
 			return shader;
 		}
 
-		String source = new String();
+		String source = "";
 		
 		for (int i = 0; i < shaderSrc.length; i++) {
 			String line = shaderSrc[i];
@@ -444,7 +440,7 @@ public final class ShaderUtils {
 				line = line.substring(0, index);
 			index = line.indexOf("\n");
 			if (index < 0)
-				line = new String(line + "\n");
+				line = line + "\n";
 			source += line;
 		}
 
@@ -525,7 +521,7 @@ public final class ShaderUtils {
 			/*byte[] errorMessage = new byte[len[0]];
 			glGetShaderInfoLog(programObject, len[0], len, 0, errorMessage, 0);
 			return new String(errorMessage, 0, len[0]);*/
-			return new String(glGetShaderInfoLog(programObject, 1024)); 
+			return glGetShaderInfoLog(programObject, 1024);
 		}
 		return null;
 	}
@@ -542,7 +538,7 @@ public final class ShaderUtils {
 			/*byte[] errorMessage = new byte[len[0]];
 			glGetProgramInfoLog(programObject, len[0], len, 0, errorMessage, 0);
 			return new String(errorMessage, 0, len[0]);*/
-			return new String(glGetProgramInfoLog(programObject, 1024)); 
+			return glGetProgramInfoLog(programObject, 1024);
 		}
 		return null;
 	}

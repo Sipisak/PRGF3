@@ -14,7 +14,7 @@ vec3 color2 = vec3(0.f, 0.f, 1.f);  // Blue
 
 vec3 spheretocartezian(float R, float azimut, float zenit){
     float x = R * sin(zenit) * cos(azimut);
-    float y = R * sin(zenit) * sin(azimut);  // Opraveno
+    float y = R * sin(zenit) * sin(azimut);
     float z = R * cos(zenit);
     return vec3(x, y, z);
 }
@@ -29,9 +29,9 @@ void main(){
     float zenit = position.x * PI;
     float azimut = position.y * 2.0 * PI;
 
-    vec3 pos1 = spheretocartezian(1.f, azimut, zenit);  // Opraveno
+    vec3 pos1 = spheretocartezian(1.f, azimut, zenit);
     vec3 pos = fce(azimut, zenit);
-    vec3 pos2 = spheretocartezian(pos.x, pos.z, pos.y);  // Opraveno
+    vec3 pos2 = spheretocartezian(pos.x, pos.z, pos.y);
 
     float alpha = 0.5 * (sin(uTime / 500.0) + 1.0);
     vec3 result = mix(pos2, pos1, alpha);

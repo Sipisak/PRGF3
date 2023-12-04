@@ -12,7 +12,7 @@ import java.util.Optional;
  */
 
 public class Mat4 {
-	protected final double mat[][] = new double[4][4];
+	protected final double[][] mat = new double[4][4];
 
 	/**
 	 * Creates a zero 4x4 matrix
@@ -72,8 +72,7 @@ public class Mat4 {
 	 */
 	public Mat4(final Mat4 m) {
 		for (int i = 0; i < 4; i++)
-			for (int j = 0; j < 4; j++)
-				mat[i][j] = m.mat[i][j];
+            System.arraycopy(m.mat[i], 0, mat[i], 0, 4);
 	}
 
 	/**
@@ -85,8 +84,7 @@ public class Mat4 {
 	 */
 	public Mat4(final Mat3 m) {
 		for (int i = 0; i < 3; i++)
-			for (int j = 0; j < 3 ; j++)
-				mat[i][j] = m.mat[i][j];
+            System.arraycopy(m.mat[i], 0, mat[i], 0, 3);
 		for (int i = 0; i < 3; i++){
 			mat[i][3] = 0;
 			mat[3][i] = 0;
@@ -104,8 +102,7 @@ public class Mat4 {
 	public Mat4(final double[] m) {
 		assert(m.length >= 16);
 		for (int i = 0; i < 4; i++)
-			for (int j = 0; j < 4; j++)
-				mat[i][j] = m[i * 4 + j];
+            System.arraycopy(m, i * 4 + 0, mat[i], 0, 4);
 	}
 
 	/**
@@ -118,8 +115,7 @@ public class Mat4 {
 		assert(m.length >= 4);
 		for (int i = 0; i < 4; i++){
 			assert(m[i].length >= 4);
-			for (int j = 0; j < 4; j++)
-				mat[i][j] = m[i][j];
+            System.arraycopy(m[i], 0, mat[i], 0, 4);
 		}
 	}
 

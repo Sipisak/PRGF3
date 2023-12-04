@@ -9,13 +9,12 @@ uniform mat4 uTransform;
 
 uniform float uTime;
 
-out vec3 FragPos; // Pozice fragmentu ve světových souřadnicích
-out vec3 Normal;  // Normála fragmentu
-
+out vec3 FragPos;
+out vec3 Normal;
 void main() {
     float radius = 1.0;
 
-    // Decrease the value of theta to shift the shape to the left
+
     float theta = (inPosition.x - uTime / 2) * 6.28;
 
     float phi = inPosition.y * 3.14;

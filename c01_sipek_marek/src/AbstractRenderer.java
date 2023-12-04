@@ -49,7 +49,7 @@ public abstract class AbstractRenderer {
 
 	public void display() {
 		glViewport(0, 0, width, height);
-		String text = new String(this.getClass().getName() + ": look at console and try keys, mouse, wheel and window interaction " );
+		String text = this.getClass().getName() + ": look at console and try keys, mouse, wheel and window interaction ";
 
 		pass++;
 		// Set the clear color

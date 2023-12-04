@@ -184,7 +184,7 @@ public class OGLTextureVolume implements OGLTexture {
 	}
 		
 	@Override
-	public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
 		super.finalize();
 		//if (glIsTexture(volumeTextureID))
 		//	glDeleteTextures(volumeTextureID);

@@ -58,7 +58,7 @@ public class OGLUtils {
 	 *         140, for GLSL 4.5 return 450, ...
 	 */
 	public static int getVersionGLSL() {
-		String version = new String(glGetString(GL_SHADING_LANGUAGE_VERSION));
+		String version = glGetString(GL_SHADING_LANGUAGE_VERSION);
 		String[] parts = version.split(" ");
 		parts = parts[0].split("\\.");
 		int versionNumber = Integer.parseInt(parts[0]) * 100 + Integer.parseInt(parts[1]);
@@ -72,7 +72,7 @@ public class OGLUtils {
 	 *         return 330, ...
 	 */
 	public static int getVersionOpenGL() {
-		String version = new String(glGetString(GL_VERSION));
+		String version = glGetString(GL_VERSION);
 		String[] parts = version.split(" ");
 		parts = parts[0].split("\\.");
 		return Integer.parseInt(parts[0]) * 100 + Integer.parseInt(parts[1]) * 10;

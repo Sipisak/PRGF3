@@ -63,7 +63,7 @@ public class OGLBuffers {
 		
 		@Override
 		public String toString() {
-			String text = new String();
+			String text = "";
 			text += String.format(Locale.US, 
 					 "VertexBuffer ID: " + id +
 					 ", stride: " + stride +
@@ -106,7 +106,7 @@ public class OGLBuffers {
 
 	public void addVertexBuffer(float[] data, int floatsPerVertex, Attrib[] attributes) {
 		
-		FloatBuffer buffer = (FloatBuffer) BufferUtils.createFloatBuffer(data.length)
+		FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length)
 				.put(data).rewind();
 		int bufferID = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, bufferID);
@@ -125,7 +125,7 @@ public class OGLBuffers {
 
 	public void setIndexBuffer(int[] data) {
 		indexCount = data.length;
-		IntBuffer indexBufferBuffer = (IntBuffer) BufferUtils.createIntBuffer(indexCount)
+		IntBuffer indexBufferBuffer = BufferUtils.createIntBuffer(indexCount)
 				.put(data).rewind();
 		indexBuffer = glGenBuffers();
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
@@ -188,14 +188,14 @@ public class OGLBuffers {
 		if (indexBuffer == 0) {
 			glDrawArrays(topology, start, count);
 		} else {
-			glDrawElements(topology, count, GL_UNSIGNED_INT, start * 4);
+			glDrawElements(topology, count, GL_UNSIGNED_INT, start * 4L);
 		}
 		unbind();
 	}
 
 	@Override
 	public String toString() {
-		String text = new String();
+		String text = "";
 		text += String.format(Locale.US, 
 				 "OGLBuffers" +
 				 ", indexCount: " + indexCount +

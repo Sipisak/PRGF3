@@ -17,7 +17,7 @@ public class LwjglWindow {
 
 	// The window handle
 	private long window;
-	private AbstractRenderer renderer;
+	private final AbstractRenderer renderer;
 
 	private static boolean DEBUG = false;
 
@@ -83,7 +83,7 @@ public class LwjglWindow {
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
-		String text = new String(renderer.getClass().getName() );
+		String text = renderer.getClass().getName();
 		// text = text.substring(0,text.lastIndexOf('.'));
 		// Create the window
 		window = glfwCreateWindow(WIDTH, HEIGHT, text, NULL, NULL);
@@ -99,14 +99,14 @@ public class LwjglWindow {
 
 		if (DEBUG)
 			glfwSetErrorCallback(new GLFWErrorCallback() {
-				GLFWErrorCallback delegate = GLFWErrorCallback.createPrint(System.err);
+				final GLFWErrorCallback delegate = GLFWErrorCallback.createPrint(System.err);
 
 				@Override
 				public void invoke(int error, long description) {
 					if (error == GLFW_VERSION_UNAVAILABLE)
 						System.err.println("GLFW_VERSION_UNAVAILABLE: This demo requires OpenGL 2.0 or higher.");
 					if (error == GLFW_NOT_INITIALIZED)
-						System.err.println("");
+						System.err.println();
 					if (error == GLFW_NO_CURRENT_CONTEXT)
 						System.err.println("GLFW_NO_CURRENT_CONTEXT");
 					if (error == GLFW_INVALID_ENUM)

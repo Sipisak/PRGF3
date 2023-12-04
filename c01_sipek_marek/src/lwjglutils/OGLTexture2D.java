@@ -132,7 +132,7 @@ public class OGLTexture2D implements OGLTexture {
         }
 
         @Override
-		public void finalize() throws Throwable {
+        protected void finalize() throws Throwable {
 			super.finalize();
 			//if (glIsProgram(shaderProgram))
 			//	glDeleteProgram(shaderProgram);
@@ -400,7 +400,7 @@ public class OGLTexture2D implements OGLTexture {
 	}
 	
 	@Override
-	public void finalize() throws Throwable{
+    protected void finalize() throws Throwable{
 		super.finalize();
 		//if (glIsTexture(textureID))
 		//	glDeleteTextures(textureID);

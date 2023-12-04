@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,12 +57,12 @@ private int topology;
 	public OGLModelOBJ(String modelPath) {
 
 		class OBJLoader{
-			List<float[]> vData = new ArrayList<float[]>(); // List of Vertex Coordinates
-			List<float[]> vtData = new ArrayList<float[]>(); // List of Texture Coordinates
-			List<float[]> vnData = new ArrayList<float[]>(); // List of Normal Coordinates
-			List<int[]> fv = new ArrayList<int[]>(); // Face Vertex Indices;
-			List<int[]> ft = new ArrayList<int[]>(); // Face Texture Indices
-			List<int[]> fn = new ArrayList<int[]>(); // Face Normal Indices
+			final List<float[]> vData = new ArrayList<float[]>(); // List of Vertex Coordinates
+			final List<float[]> vtData = new ArrayList<float[]>(); // List of Texture Coordinates
+			final List<float[]> vnData = new ArrayList<float[]>(); // List of Normal Coordinates
+			final List<int[]> fv = new ArrayList<int[]>(); // Face Vertex Indices;
+			final List<int[]> ft = new ArrayList<int[]>(); // Face Texture Indices
+			final List<int[]> fn = new ArrayList<int[]>(); // Face Normal Indices
 			
 			OBJLoader(String modelPath) {
 				loadOBJModel(modelPath);
@@ -80,14 +81,8 @@ private int topology;
 					}
 
 					BufferedReader br = null;
-					try {
-						br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-					} catch (UnsupportedEncodingException e) {
-						System.err.println("File error ");
-						e.printStackTrace();
-						return;
-					}
-					String line = null;
+                    br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+                    String line = null;
 					while ((line = br.readLine()) != null) {
 						if (line.startsWith("#")) {
 						} else if (line.equals("")) {
@@ -116,12 +111,12 @@ private int topology;
 			}
 
 			private float[] processData(String read) {
-				String s[] = read.split("\\s+");
+				String[] s = read.split("\\s+");
 				return (processFloatData(s)); 
 			}
 
-			private float[] processFloatData(String sdata[]) {
-				float data[] = new float[sdata.length - 1];
+			private float[] processFloatData(String[] sdata) {
+				float[] data = new float[sdata.length - 1];
 				for (int loop = 0; loop < data.length; loop++) {
 					data[loop] = Float.parseFloat(sdata[loop + 1]);
 				}
@@ -129,7 +124,7 @@ private int topology;
 			}
 
 			private void processFaceData(String fread) {
-				String s[] = fread.split("\\s+");
+				String[] s = fread.split("\\s+");
 				if (fread.contains("//")) { 
 					// Pattern is present if obj has only v and vn in face data
 					for (int loop = 1; loop < s.length; loop++) {
@@ -140,7 +135,7 @@ private int topology;
 				processfIntData(s); // Pass in face data
 			}
 
-			private void processfIntData(String sdata[]) {
+			private void processfIntData(String[] sdata) {
 									
 				int[] vdata = new int[3];
 				int[] vtdata = new int[3];
@@ -218,7 +213,7 @@ private int topology;
 		
 		OBJLoader loader = new OBJLoader(modelPath); 
 		
-		float coords4[] = new float[4];
+		float[] coords4 = new float[4];
 	System.out.println(loader.fv.size() + " " + (loader.fv.get(0)).length);
 		if (loader.fv.get(0)[0] > 0) {
 			verticesBuffer = ByteBuffer.allocateDirect(loader.fv.size() * 4
@@ -230,10 +225,10 @@ private int topology;
 
 			coords4[3] = 1;
 			for (int i = 0; i < loader.fv.size(); i++) {
-				for (int j = 0; j < ((int[]) loader.fv.get(i)).length; j++) {
-					coords4[0] = (float) loader.vData.get(loader.fv.get(i)[j] - 1)[0]; // x
-					coords4[1] = (float) loader.vData.get(loader.fv.get(i)[j] - 1)[1]; // y
-					coords4[2] = (float) loader.vData.get(loader.fv.get(i)[j] - 1)[2]; // z
+				for (int j = 0; j < loader.fv.get(i).length; j++) {
+					coords4[0] = loader.vData.get(loader.fv.get(i)[j] - 1)[0]; // x
+					coords4[1] = loader.vData.get(loader.fv.get(i)[j] - 1)[1]; // y
+					coords4[2] = loader.vData.get(loader.fv.get(i)[j] - 1)[2]; // z
 					verticesBuffer.put(coords4);
 				}
 
@@ -252,16 +247,16 @@ private int topology;
 				try {
 					
 		//			for (int j = 0; j < 3; j++) {
-					for (int j = 0; j < ((int[]) loader.ft.get(i)).length; j++) {
+					for (int j = 0; j < loader.ft.get(i).length; j++) {
 								texCoordsBuffer
-							.put((float) loader.vtData.get(loader.ft.get(i)[j] - 1)[0]);
+							.put(loader.vtData.get(loader.ft.get(i)[j] - 1)[0]);
 					texCoordsBuffer
-							.put((float) loader.vtData.get(loader.ft.get(i)[j] - 1)[1]);
+							.put(loader.vtData.get(loader.ft.get(i)[j] - 1)[1]);
 				}
 				} catch (ArrayIndexOutOfBoundsException exception) {
-					System.out.println(i + " " + ((int[]) loader.ft.get(i)).length); 
+					System.out.println(i + " " + loader.ft.get(i).length);
 					System.out.println(loader.ft.get(i));
-					System.out.println(loader.ft.get(i)[0] + " " + loader.ft.get(i)[1] + " "+loader.ft.get(i)[2] + "");
+					System.out.println(loader.ft.get(i)[0] + " " + loader.ft.get(i)[1] + " "+loader.ft.get(i)[2]);
 					System.out.println(loader.vtData.get(loader.ft.get(i)[0] - 1));
 					System.out.println(loader.vtData.get(loader.ft.get(i)[1] - 1));
 					System.out.println(loader.vtData.get(loader.ft.get(i)[2] - 1));
@@ -273,7 +268,7 @@ private int topology;
 			texCoordsBuffer.position(0);
 		}
 
-		float coords3[] = new float[3];
+		float[] coords3 = new float[3];
 		if (loader.fn.get(0)[0] > 0) {
 			normalsBuffer = ByteBuffer.allocateDirect(loader.fn.size() * 3
 					* (loader.fn.get(0)).length * 4)
@@ -283,10 +278,10 @@ private int topology;
 			normalsBuffer.position(0);
 
 			for (int i = 0; i < loader.fn.size(); i++) {
-				for (int j = 0; j < ((int[]) loader.fn.get(i)).length; j++) {
-					coords3[0] = (float) loader.vnData.get(loader.fn.get(i)[j] - 1)[0]; // x
-					coords3[1] = (float) loader.vnData.get(loader.fn.get(i)[j] - 1)[1]; // y
-					coords3[2] = (float) loader.vnData.get(loader.fn.get(i)[j] - 1)[2]; // z
+				for (int j = 0; j < loader.fn.get(i).length; j++) {
+					coords3[0] = loader.vnData.get(loader.fn.get(i)[j] - 1)[0]; // x
+					coords3[1] = loader.vnData.get(loader.fn.get(i)[j] - 1)[1]; // y
+					coords3[2] = loader.vnData.get(loader.fn.get(i)[j] - 1)[2]; // z
 					normalsBuffer.put(coords3);
 				}
 			}
